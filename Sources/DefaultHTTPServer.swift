@@ -43,14 +43,14 @@ public final class DefaultHTTPServer: HTTPServer {
         return try! acceptSocket.getSockName()
     }
 
-    public func start(ignoreSigPipe: Bool = false) throws {
+    public func start() throws {
         guard acceptSocket == nil else {
             logger.error("Server already started")
             return
         }
         logger.info("Starting HTTP server on [\(interface)]:\(port) ...")
         acceptSocket = try TCPSocket()
-        acceptSocket.ignoreSigPipe = ignoreSigPipe
+        acceptSocket.ignoreSigPipe = true
         try acceptSocket.bind(port: port, interface: interface)
         try acceptSocket.listen()
         eventLoop.setReader(acceptSocket.fileDescriptor) { [unowned self] in
